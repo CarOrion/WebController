@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Event</title>
+    <script>
+        function sendKey(key) {
+            console.log("Gönderilen tuş:", key);
+            fetch("/keypress", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ key: key })
+            })
+            .then(response => response.json())
+            .then(data => console.log("Sunucu cevabı:", data));
+        }
+
+        document.addEventListener("keydown", function(event) {
+            sendKey(event.key);  // Klavyeden basılan tuşları gönder
+        });
+        function buttonClick() {
+            sendKey("Buton Tıklandı");
+        }
+    </script>
+</head>
+<body>
+    <h1>Button Event System</h1>
+    <button onclick="buttonClick()">Button</button>
+</body>
+</html>
