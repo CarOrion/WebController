@@ -1,5 +1,6 @@
 import logging
 from flask import Flask, request, render_template, jsonify
+import requests
 
 app = Flask(__name__)
 log = logging.getLogger('werkzeug')
@@ -14,7 +15,10 @@ def home():
 def keypress():
     data = request.get_json()
     key = data.get('key')
-    print(f"Sunucuya gönderilen tuş: {key}, Slider değeri: {sliderValue}")
+    slider_value = sliderValue
+    # Send to listener
+    response = requests.post('http://127.0.0.1:5001/keypress', json={'key': key, 'slider_value': slider_value})
+    print(f"Sunucuya gönderilen tuş: {key}, Slider değeri: {slider_value}")
     return jsonify({"status": "success", "key": key})
 
 @app.route('/slider', methods=['POST'])
