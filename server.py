@@ -3,8 +3,8 @@ from flask import Flask, request, render_template, jsonify
 import requests
 
 app = Flask(__name__)
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
+#log = logging.getLogger('werkzeug')
+#log.setLevel(logging.ERROR)
 sliderValue = 0
 
 @app.route('/')
@@ -29,4 +29,4 @@ def slider():
     return jsonify({"status": "success", "value": sliderValue})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=5000, debug=True)
