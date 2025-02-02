@@ -8,10 +8,22 @@
 <body>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <h1>Button Event System</h1>
-    <button onclick="buttonClick('W')">W</button>
-    <button onclick="buttonClick('A')">A</button>
-    <button onclick="buttonClick('S')">S</button>
-    <button onclick="buttonClick('D')">D</button>
-    <input type="range" id="slider" min="0" max="100" step="1" oninput="sliderChange(event)">
+    <button 
+        onmousedown="buttonDown('W')" 
+        onmouseup="buttonUp('W')" 
+        onmouseleave="buttonUp('W')">W</button>
+    <button 
+        onmousedown="buttonDown('A')" 
+        onmouseup="buttonUp('A')" 
+        onmouseleave="buttonUp('A')">A</button>
+    <button 
+        onmousedown="buttonDown('S')" 
+        onmouseup="buttonUp('S')" 
+        onmouseleave="buttonUp('S')">S</button>
+    <button 
+        onmousedown="buttonDown('D')" 
+        onmouseup="buttonUp('D')" 
+        onmouseleave="buttonUp('D')">D</button>
+    <input type="range" id="slider" min="0" max="100" value="0" step="5" oninput="sliderChange(event)">
 </body>
 </html>

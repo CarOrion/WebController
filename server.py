@@ -1,25 +1,30 @@
-import logging
 from flask import Flask, request, render_template, jsonify
 import requests
 
 app = Flask(__name__)
-#log = logging.getLogger('werkzeug')
-#log.setLevel(logging.ERROR)
 sliderValue = 0
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
-@app.route('/keypress', methods=['POST'])
-def keypress():
+@app.route('/button_down', methods=['POST'])
+def button_down():
     data = request.get_json()
     key = data.get('key')
     slider_value = sliderValue
-    # Send to listener
-    response = requests.post('http://127.0.0.1:5001/keypress', json={'key': key, 'slider_value': slider_value})
-    print(f"Sunucuya gönderilen tuş: {key}, Slider değeri: {slider_value}")
-    return jsonify({"status": "success", "key": key})
+    response = requests.post('http://127.0.0.1:5201/keypress', json={'key': key, 'event': 'clicked', 'slider_value': slider_value})
+    print(f"{key} clicked.")
+    return jsonify({"status": "success", 'event': 'released', "key": key})
+
+@app.route('/button_up', methods=['POST'])
+def button_up():
+    data = request.get_json()
+    key = data.get('key')
+    slider_value = sliderValue
+    response = requests.post('http://127.0.0.1:5201/keypress', json={'key': key, 'event': 'released', 'slider_value': slider_value})
+    print(f"{key} released.")
+    return jsonify({"status": "success", 'event': 'released', "key": key})
 
 @app.route('/slider', methods=['POST'])
 def slider():
@@ -29,4 +34,4 @@ def slider():
     return jsonify({"status": "success", "value": sliderValue})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5200, debug=True)
