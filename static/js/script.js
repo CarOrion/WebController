@@ -1,4 +1,5 @@
 let isButtonPressed = false;
+let stopState = true; //Stopped in False, working in True
 
 function sendKey(key) {
     fetch("/keypress", {
@@ -50,4 +51,25 @@ function buttonUp(key) {
         .then(response => response.json())
         .then(data => console.log(data));
     }
+}
+
+function setStop(){
+    if(stopState){
+        document.getElementById("stopBtn").style.backgroundColor = "green";
+        document.getElementById("stopBtn").innerHTML = "EXECUTE";
+        stopState = false;
+    }
+    else{
+        document.getElementById("stopBtn").style.backgroundColor = "red";
+        document.getElementById("stopBtn").innerHTML = "STOP";
+        stopState = true;
+    }
+    fetch("/stopButton", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ state: stopState})
+    })
+    .then(response => response.json())
+    .then(data => console.log("Server Output:", data));
+    console.log(stopState);
 }
