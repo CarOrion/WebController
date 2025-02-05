@@ -2,6 +2,8 @@ from flask import Flask, request
 import atexit
 import spidev
 
+
+stopState = True
 spi = spidev.SpiDev()
 spi.open(0, 0)
 spi.max_speed_hz = 2000000
@@ -16,8 +18,12 @@ def keypress():
     event = data.get('event')
     slider_value = data.get('slider_value')
     
-    send_data(key, event, slider_value)
-    print({key},{event},{slider_value})
+    if(stopState):
+        send_data(key, event, slider_value, stopState)
+        print({key},{event},{slider_value})
+    else:
+        send_data("X", "X", 0, stopState)
+        print(f"Car in STOP state.{stopState}")
     
     return "Data received successfully!", 200
 
@@ -27,19 +33,17 @@ def stopButton():
 
     stopState = data.get('state')
 
-    send_data("X", stopState, 0)
-    print(stopState)
-
     return "Data received successfully!", 200
 
-def send_data(key, event, slider_value):
+def send_data(key, event, slider_value, stopState):
 
     # String to byte
     key_byte = key.encode('utf-8')
     event_bytes = event.encode('utf-8') + b'\x00'
     slider_bytes = str(slider_value).encode('utf-8') + b'\x00'  # Integer to byte
+    bool_byte = b'\x01' if stopState else b'\x00' # Boolean to byte
 
-    data = key_byte + event_bytes + slider_bytes
+    data = key_byte + event_bytes + slider_bytes + bool_byte
 
     spi.xfer2(list(data))
 
