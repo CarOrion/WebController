@@ -1,11 +1,11 @@
 from flask import Flask, request
-#import spidev
-#import struct
+import atexit
+import spidev
 
-#spi = spidev.SpiDev()
-#spi.open(0, 0)
-#spi.max_speed_hz = 2000000
-#spi.mode = 0b00
+spi = spidev.SpiDev()
+spi.open(0, 0)
+spi.max_speed_hz = 2000000
+
 app = Flask(__name__)
 
 @app.route('/postService', methods=['POST'])
@@ -16,7 +16,7 @@ def keypress():
     event = data.get('event')
     slider_value = data.get('slider_value')
     
-    #send_data(event, slider_value)
+    send_data(key, event, slider_value)
     print({key},{event},{slider_value})
     
     return "Data received successfully!", 200
@@ -27,16 +27,26 @@ def stopButton():
 
     stopState = data.get('state')
 
+    send_data("STOP", stopState, 0)
     print(stopState)
 
     return "Data received successfully!", 200
 
-'''def send_data(angle, distance):
-    """ 2 adet 16 bitlik integer gönder (Toplam 4 byte) """
-    data = struct.pack('hh', angle, distance)
-    response = spi.xfer2(list(data))
-    print(f"Sent: Angle={angle}, Distance={distance}")
-    print(f"Received: {response}")'''
+def send_data(key, event, slider_value):
+
+    # String to byte
+    key_byte = key.encode('utf-8')
+    event_bytes = event.encode('utf-8') + b'\x00'
+    slider_bytes = str(slider_value).encode('utf-8') + b'\x00'  # Integer to byte
+
+    data = key_byte + event_bytes + slider_bytes
+
+    spi.xfer2(list(data))
+
+def close_spi():
+    spi.close()
 
 if __name__ == '__main__':
     app.run(port=5201, use_reloader=False)
+
+atexit.register(close_spi)
