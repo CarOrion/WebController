@@ -27,7 +27,7 @@ def stopButton():
 
     stopState = data.get('state')
 
-    send_data("STOP", stopState, 0)
+    send_data("S", stopState, 0)
     print(stopState)
 
     return "Data received successfully!", 200
