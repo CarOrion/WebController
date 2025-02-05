@@ -15,7 +15,7 @@ def button_down():
     slider_value = sliderValue
     response = requests.post('http://127.0.0.1:5201/postService', json={'key': key, 'event': 'clicked', 'slider_value': slider_value})
     print(f"{key} clicked.")
-    return jsonify({"status": "success", 'event': 'c', "key": key})
+    return jsonify({"status": "success", 'event': 'C', "key": key})
 
 @app.route('/button_up', methods=['POST'])
 def button_up():
@@ -24,7 +24,7 @@ def button_up():
     slider_value = sliderValue
     response = requests.post('http://127.0.0.1:5201/postService', json={'key': key, 'event': 'released', 'slider_value': slider_value})
     print(f"{key} released.")
-    return jsonify({"status": "success", 'event': 'r', "key": key})
+    return jsonify({"status": "success", 'event': 'R', "key": key})
 
 @app.route('/slider', methods=['POST'])
 def slider():
