@@ -7,7 +7,8 @@ import serial
 stopState = True
 
 #UART Start
-ser = serial.Serial("/dev/serial0", baudrate=115200)
+serial_port = "/dev/ttyAMA0"  # UART portu 
+ser = serial.Serial(serial_port, baudrate=9600)
 #baudrate may be 250000
 
 '''#SPI Start
@@ -58,15 +59,16 @@ def send_data(key, event, slider_value, stopState):
 
     key_byte = 0x00 if key is None else ord(key)
     event_byte = 0x00 if event is None else ord(event)
-    slider_value_byte = 0xFF if slider_value is None else slider_value
+    slider_value_byte = 0xFF if slider_value is None else int(slider_value)
     #255 used in None state because in hexadecimal 0x00 mean 0 and when slider_value in 0, its 0x00 too.
     stopStateByte = 1 if stopState else 0
 
-    data = key_byte, event_byte, slider_value_byte, stopStateByte
+    data = bytes([key_byte, event_byte, slider_value_byte, stopStateByte])
 
-    ser.write(bytes(data))
+    ser.write(data)
     #Values should be like: key_byte=W,A,S,D,None / event_byte=R,C,None / slider_value_byte = 0-100,255(You can check why we used 255 in upper comment.) / stopStateByte=True,False
-    print(f"Data Sent: {bytes(data)}")
+    #print(f"Data Sent: {bytes(data)}")
+    print(data)
 
     '''#SPI CODES
     # String to byte

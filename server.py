@@ -13,7 +13,7 @@ def button_down():
     data = request.get_json()
     key = data.get('key')
     slider_value = sliderValue
-    response = requests.post('http://127.0.0.1:5201/postService', json={'key': key, 'event': 'clicked', 'slider_value': slider_value})
+    response = requests.post('http://127.0.0.1:5201/postService', json={'key': key, 'event': 'C', 'slider_value': slider_value})
     print(f"{key} clicked.")
     return jsonify({"status": "success", 'event': 'C', "key": key})
 
@@ -22,7 +22,7 @@ def button_up():
     data = request.get_json()
     key = data.get('key')
     slider_value = sliderValue
-    response = requests.post('http://127.0.0.1:5201/postService', json={'key': key, 'event': 'released', 'slider_value': slider_value})
+    response = requests.post('http://127.0.0.1:5201/postService', json={'key': key, 'event': 'R', 'slider_value': slider_value})
     print(f"{key} released.")
     return jsonify({"status": "success", 'event': 'R', "key": key})
 
