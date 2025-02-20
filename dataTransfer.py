@@ -51,8 +51,13 @@ def send_data(key, event, slider_value, stopState):
         raise ValueError(f"Invaild data in KEY: {key}")
     if event not in ['C', 'R', None]:
         raise ValueError(f"Invaild data in EVENT: {event}")
-    if slider_value is not None and not (0 <= slider_value <= 100):
-        raise ValueError(f"Invaild data in SLIDERVALUE: {slider_value}")
+    if slider_value is not None:
+        try:
+            slider_value = int(slider_value)
+            if not (0 <= slider_value <= 100):
+                raise ValueError(f"Invalid data in SLIDERVALUE: {slider_value}")
+        except ValueError:
+            raise ValueError(f"Invalid data in SLIDERVALUE: {slider_value}. Must be between 0 and 100.")
     if stopState not in [True, False]:
         raise ValueError(f"Invaild data in STOPSTATE: {stopState}")
 
@@ -67,7 +72,7 @@ def send_data(key, event, slider_value, stopState):
 
     ser.write(data)
     #Values should be like: key_byte=W,A,S,D,None / event_byte=R,C,None / slider_value_byte = 0-100,255(You can check why we used 255 in upper comment.) / stopStateByte=True,False
-    #print(f"Data Sent: {bytes(data)}")
+    print(f"Data Sent: {bytes(data)}")
     print(data)
 
     '''#SPI CODES
